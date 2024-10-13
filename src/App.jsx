@@ -1,4 +1,4 @@
-import { Route, Routes, useNavigate } from "react-router-dom";
+import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
 import Home from "./pages/Home";
 import Collection from "./pages/Collection";
 import About from "./pages/About";
@@ -22,6 +22,10 @@ const App = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const { setCartItems } = useContext(ShopContext);
   const navigate = useNavigate();
+  const { pathname } = useLocation();
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [pathname]);
   useEffect(() => {
     const savedIsLoggedIn = JSON.parse(localStorage.getItem("isLoggedIn"));
     if (savedIsLoggedIn) {
