@@ -27,7 +27,6 @@ const Contact = () => {
           src="/imgs/contact_img.png"
           alt="about image"
         />
-        <div>
           <form
             onSubmit={(e) => {
               e.preventDefault();
@@ -80,7 +79,6 @@ const Contact = () => {
               Submit
             </button>
           </form>
-        </div>
       </div>
       <NewsLetter />
     </div>
