@@ -1,0 +1,19 @@
+.contactForm input,
+.contactForm textarea {
+  padding: 0.5rem 1.5rem;
+  width: 100%;
+}
+
+.contactForm input:focus,
+.contactForm textarea:focus {
+  box-shadow: none;
+  border-color: gray;
+}
+
+@media screen and (width>=768px) {
+
+  .contactForm input,
+  .contactForm textarea {
+    width: 22rem;
+  }
+}

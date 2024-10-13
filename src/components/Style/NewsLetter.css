@@ -1,0 +1,32 @@
+.NewsLetterForm input {
+  outline: none;
+  padding: 8px 25px;
+  border: 1px solid #ccc;
+  width: 100%;
+  margin-bottom: 1rem;
+  border-top-left-radius: 6px;
+  border-bottom-left-radius: 6px;
+  transition: 0.2s;
+}
+.NewsLetterForm input:focus{
+  border-color: gray;
+}
+
+.NewsLetterForm button {
+  background: #000;
+  border: none;
+  outline: none;
+  color: white;
+  text-transform: uppercase;
+  padding: 16px 40px;
+  font-size: 12px;
+  border-top-right-radius: 6px;
+  border-bottom-right-radius: 6px;
+}
+
+@media screen and (width >=768px) {
+  .NewsLetterForm input {
+    width: 50%;
+    margin-bottom: 0;
+  }
+}
