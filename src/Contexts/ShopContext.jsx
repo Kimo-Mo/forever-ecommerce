@@ -8,7 +8,7 @@ const ShopContextProvider = (props) => {
   useEffect(() => {
     // ====== fetch from github ======
     fetch(
-      "https://raw.githubusercontent.com/Kimo-Mo/forever-json-server/main/db.json"
+      "https://raw.githubusercontent.com/Kimo-Mo/forever-firebase/main/db.json"
     )
       .then((response) => {
         if (!response.ok) {
