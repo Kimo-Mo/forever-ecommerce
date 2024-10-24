@@ -1,0 +1,41 @@
+.adminPage a {
+  border: 1px solid #ccc;
+  border-right: 0;
+  border-radius: 0;
+}
+
+.adminPage .active {
+  background-color: #ffebf5;
+  border-color: #c586a5;
+}
+
+.form-check-input:focus {
+  box-shadow: none;
+}
+
+.sideBar {
+  border-bottom: 1px solid #ccc;
+  border-left: 1px solid #ccc;
+}
+
+@media screen and (width >=768px) {
+
+  .addProductForm>input,
+  .addProductForm>select,
+  .addProductForm>textarea,
+  .addProductForm .priceInput {
+    max-width: 60%;
+  }
+
+  .adminPage a {
+    
+      border-radius: 6px;
+        border-top-right-radius: 0;
+        border-bottom-right-radius: 0;
+  }
+
+  .sideBar {
+    border-bottom: none;
+    border-left: none;
+  }
+}

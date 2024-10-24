@@ -1,5 +1,6 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react/prop-types */
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
@@ -16,7 +17,21 @@ const Login = ({ setIsLoggedIn }) => {
     email: false,
     password: false,
   });
-
+  let AdminUser = {
+    username: "Kareem",
+    email: "kimomo844@gmail.com",
+    password: "KimoMo192",
+  };
+  useEffect(() => {
+    const storedUsers = JSON.parse(localStorage.getItem("users")) || [];
+    const adminExists = storedUsers.some(
+      (user) => user.email === AdminUser.email
+    );
+    if (!adminExists) {
+      storedUsers.push(AdminUser);
+      localStorage.setItem("users", JSON.stringify(storedUsers));
+    }
+  }, [AdminUser]);
   function validateUsername(username) {
     return username.length > 3 && username !== "";
   }
@@ -62,12 +77,15 @@ const Login = ({ setIsLoggedIn }) => {
       if (currentState === "SIGN UP") {
         // Get the users array from localStorage or initialize an empty array
         let allUsers = JSON.parse(localStorage.getItem("users")) || [];
-
         // Check if email is already registered
         const userExists = allUsers.some(
           (storedUser) => storedUser.email === formInputs.email
         );
-        if (userExists) {
+        if (
+          userExists ||
+          (userData.email === AdminUser.email &&
+            userData.password === AdminUser.password)
+        ) {
           toast.error("Email already registered. Please log in.");
         } else {
           allUsers.push(userData); // Add new user to the array
@@ -90,6 +108,12 @@ const Login = ({ setIsLoggedIn }) => {
           if (matchingUser) {
             // If the email exists, check the password
             if (matchingUser.password === formInputs.password) {
+              if (
+                userData.email === AdminUser.email &&
+                userData.password === AdminUser.password
+              ) {
+                localStorage.setItem("isAdminUser", JSON.stringify(true));
+              }
               setIsLoggedIn(true);
               localStorage.setItem("isLoggedIn", JSON.stringify(true));
               toast.success("User logged in successfully!");

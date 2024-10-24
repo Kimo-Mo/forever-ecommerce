@@ -3,11 +3,7 @@ import "./Style/NavBar.css";
 import { Link, NavLink } from "react-router-dom";
 import { useContext, useState } from "react";
 import { ShopContext } from "../Contexts/ShopContext";
-const NavBar = ({
-  setShowSearchBar,
-  handleLogout,
-  isLoggedIn,
-}) => {
+const NavBar = ({ setShowSearchBar, handleLogout, isLoggedIn }) => {
   const [menuIsVisible, setMenuIsVisible] = useState(false);
   const { getCartCount } = useContext(ShopContext);
   return (
@@ -74,6 +70,23 @@ const NavBar = ({
             }}
           />
         </NavLink>
+        {JSON.parse(localStorage.getItem("isAdminUser")) && (
+          <NavLink
+            to="/Admin"
+            className="d-flex flex-column align-items-center gap-1">
+            <p className="m-0">Admin</p>
+            <hr
+              className="m-0  d-none"
+              style={{
+                width: "50%",
+                height: "1.5px",
+                border: "none",
+                backgroundColor: "black",
+                opacity: "0.7",
+              }}
+            />
+          </NavLink>
+        )}
       </ul>
 
       <div className="d-flex align-items-center gap-3">
@@ -194,6 +207,16 @@ const NavBar = ({
             }}>
             Contact
           </NavLink>
+          {JSON.parse(localStorage.getItem("isAdminUser")) && (
+            <NavLink
+              to="/Admin"
+              className="py-3 ps-5 border"
+              onClick={() => {
+                setMenuIsVisible(false);
+              }}>
+              Admin
+            </NavLink>
+          )}
         </div>
       </div>
     </div>

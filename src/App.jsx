@@ -15,6 +15,7 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import NotFound from "./pages/NotFound";
 import { ShopContext } from "./Contexts/ShopContext";
+import Admin from "./pages/Admin";
 
 const App = () => {
   const [showSearchBar, setShowSearchBar] = useState(false);
@@ -41,6 +42,7 @@ const App = () => {
     localStorage.removeItem("cartItems");
     setCartItems({});
     localStorage.removeItem("username");
+    localStorage.removeItem("isAdminUser");
   }
   return (
     <div className="container">
@@ -69,12 +71,11 @@ const App = () => {
         {isLoggedIn && <Route path="/PlaceOrder" element={<PlaceOrder />} />}
         <Route
           path="/Login"
-          element={
-            <Login
-              setIsLoggedIn={setIsLoggedIn}
-            />
-          }
+          element={<Login setIsLoggedIn={setIsLoggedIn} />}
         />
+        {JSON.parse(localStorage.getItem("isAdminUser")) && (
+          <Route path="/Admin" element={<Admin />} />
+        )}
         <Route path="*" element={<NotFound />} />
       </Routes>
       <Footer />
