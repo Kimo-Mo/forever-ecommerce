@@ -47,52 +47,58 @@ const Cart = () => {
             (product) => product.id === item.id
           );
           return (
-            <div
-              key={index}
-              className="py-4 border-top border-bottom d-flex align-items-center justify-content-center justify-content-md-between gap-3 gap-md-0">
-              <div className="productCartItem d-flex align-items-start justify-content-center gap-3">
-                <img
-                  src={productData.img}
-                  alt="product image"
-                  style={{ width: "5rem" }}
-                />
-                <div>
-                  <h6>{productData.title}</h6>
-                  <p className="mb-0 mt-3">
-                    <span>${productData.price}</span>
-                    <span className="bg-light-subtle border py-1 px-2 ms-3 text-uppercase">
-                      {item.size}
-                    </span>
-                  </p>
+            productData && (
+              <div
+                key={index}
+                className="py-4 border-top border-bottom d-flex align-items-center justify-content-center justify-content-md-between gap-3 gap-md-0">
+                <div className="productCartItem d-flex align-items-start justify-content-center gap-3">
+                  <img
+                    src={productData.img}
+                    alt="product image"
+                    style={{ width: "5rem" }}
+                  />
+                  <div>
+                    <h6>{productData.title}</h6>
+                    <p className="mb-0 mt-3">
+                      <span>${productData.price}</span>
+                      <span className="bg-light-subtle border py-1 px-2 ms-3 text-uppercase">
+                        {item.size}
+                      </span>
+                    </p>
+                  </div>
                 </div>
+                <input
+                  type="number"
+                  min="1"
+                  defaultValue={item.quantity}
+                  className="form-control"
+                  style={{ maxWidth: "5rem" }}
+                  onChange={(e) => {
+                    e.target.value === "" || e.target.value === "0"
+                      ? null
+                      : updateQuantity(
+                          item.id,
+                          item.size,
+                          Number(e.target.value)
+                        );
+                  }}
+                />
+                <img
+                  src="/imgs/bin_icon.png"
+                  alt=""
+                  style={{
+                    width: "1.5rem",
+                    height: "1.5rem",
+                    cursor: "pointer",
+                  }}
+                  className=""
+                  onClick={() => {
+                    updateQuantity(item.id, item.size, 0);
+                    toast.error("You Deleted Product(s)!");
+                  }}
+                />
               </div>
-              <input
-                type="number"
-                min="1"
-                defaultValue={item.quantity}
-                className="form-control"
-                style={{ maxWidth: "5rem" }}
-                onChange={(e) => {
-                  e.target.value === "" || e.target.value === "0"
-                    ? null
-                    : updateQuantity(
-                        item.id,
-                        item.size,
-                        Number(e.target.value)
-                      );
-                }}
-              />
-              <img
-                src="/imgs/bin_icon.png"
-                alt=""
-                style={{ width: "1.5rem", height: "1.5rem", cursor: "pointer" }}
-                className=""
-                onClick={() => {
-                  updateQuantity(item.id, item.size, 0);
-                  toast.error("You Deleted Product(s)!");
-                }}
-              />
-            </div>
+            )
           );
         })}
       </div>

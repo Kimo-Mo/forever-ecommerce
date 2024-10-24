@@ -1,40 +1,44 @@
 /* eslint-disable react/prop-types */
 import { createContext, useEffect, useState } from "react";
+import { useLocation } from "react-router-dom";
 import { toast } from "react-toastify";
 export const ShopContext = createContext({});
 const ShopContextProvider = (props) => {
   const [cartItems, setCartItems] = useState({});
   const [products, setProducts] = useState();
+  const { pathname } = useLocation();
   useEffect(() => {
-    // ====== fetch from github ======
-    fetch(
-      "https://raw.githubusercontent.com/Kimo-Mo/forever-json-server/main/db.json"
-    )
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error("Network response was not ok");
-        }
-        return response.json();
-      })
-      .then((data) => {
-        setProducts(data.products);
-      })
-      .catch((error) => {
-        console.error("There was a problem with the fetch operation:", error);
-      });
-    // ====== fetch from local host ======
-  //   fetch("http://localhost:3000/products")
-  //     .then((res) => res.json())
-  //     .then((data) => {
-  //       setProducts(data);
-  //     })
-  //     .catch((err) => console.log(err));
+    if (pathname.includes("/")) {
+      // ====== fetch from vercel deployment ======
+      fetch(
+        "https://forever-json-server.vercel.app/products"
+      )
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error("Network response was not ok");
+          }
+          return response.json();
+        })
+        .then((data) => {
+          setProducts(data);
+        })
+        .catch((error) => {
+          console.error("There was a problem with the fetch operation:", error);
+        });
+      // ====== fetch from local host ======
+      // fetch("http://localhost:3000/products")
+      //   .then((res) => res.json())
+      //   .then((data) => {
+      //     setProducts(data);
+      //   })
+      //   .catch((err) => console.log(err));
 
-    const savedCartItems = JSON.parse(localStorage.getItem("cartItems"));
-    if (savedCartItems) {
-      setCartItems(savedCartItems);
+      const savedCartItems = JSON.parse(localStorage.getItem("cartItems"));
+      if (savedCartItems) {
+        setCartItems(savedCartItems);
+      }
     }
-  }, []);
+  }, [pathname]);
   const addToCart = async (productId, size) => {
     if (!size) {
       toast.error("Please Select a Size for Product !");
@@ -81,7 +85,7 @@ const ShopContextProvider = (props) => {
               totalAmount += itemInfo.price * cartItems[items][item];
             }
           } catch (error) {
-            console.log(error);
+            console.error(error);
           }
         }
       }

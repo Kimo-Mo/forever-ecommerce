@@ -1,5 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Prata&display=swap');
+
 * {
   margin: 0;
   padding: 0;
@@ -103,8 +104,6 @@ a.active>hr {
 .loginForm {
   width: 100%;
 }
-
-
 
 .loginTitle {
   font-family: "Prata", serif;

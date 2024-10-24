@@ -18,7 +18,7 @@ const Product = ({ isLoggedIn }) => {
     window.scrollTo(0, 0);
   }, [pathname]);
   useEffect(() => {
-    // ====== fetch from github ======
+    // ====== fetch from vercel deployment ======
     if (products) {
       const product = products.find((p) => p.id === productId);
       if (product) {
@@ -37,14 +37,14 @@ const Product = ({ isLoggedIn }) => {
     //   });
   }, [productId, products]);
 
-  return products && productItem ? (
+  return productItem ? (
     <div className="pt-5 border-top ">
       <div className="d-flex gap-5 gap-lg-0 flex-column flex-md-row justify-content-between align-items-center">
         <div className="d-flex justify-content-center" style={{ flex: "1" }}>
           <img src={img} alt="product image" />
         </div>
         <div style={{ flex: "1" }}>
-          <h4>{productItem.title}</h4>
+          <h4>{productItem.title || "Product Title"}</h4>
           <div className="stars d-flex gap-1 align-items-center mt-2 mb-4">
             <img src="/imgs/star_icon.png" alt="start icon" />
             <img src="/imgs/star_icon.png" alt="start icon" />
@@ -53,9 +53,9 @@ const Product = ({ isLoggedIn }) => {
             <img src="/imgs/star_dull_icon.png" alt="start icon" />
             <p className="m-0">(122)</p>
           </div>
-          <h2 className="mb-3">${productItem.price}</h2>
+          <h2 className="mb-3">${productItem.price || "0"}</h2>
           <p className="text-secondary pe-md-5 me-md-5">
-            {productItem.description}
+            {productItem.description || "Product Description"}
           </p>
           <div className="my-4">
             <p>Select Sizes</p>
