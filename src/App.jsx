@@ -1,82 +1,118 @@
-import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
+import { Route, Routes, useLocation } from "react-router-dom";
 import Home from "./pages/Home";
-import Collection from "./pages/Collection";
-import About from "./pages/About";
-import Contact from "./pages/Contact";
-import Product from "./pages/Product";
-import Cart from "./pages/Cart";
-import Login from "./pages/Login";
-import PlaceOrder from "./pages/PlaceOrder";
 import NavBar from "./components/NavBar";
 import Footer from "./components/Footer";
 import SearchBar from "./components/SearchBar";
-import { useContext, useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import NotFound from "./pages/NotFound";
-import { ShopContext } from "./Contexts/ShopContext";
-import Admin from "./pages/Admin";
+import LoadingProducts from "./components/LoadingProducts";
+import { useAuth } from "./customs/useAuth";
+
+// lazy loading components
+const Collection = React.lazy(() => import("./pages/Collection"));
+const About = React.lazy(() => import("./pages/About"));
+const Contact = React.lazy(() => import("./pages/Contact"));
+const Product = React.lazy(() => import("./pages/Product"));
+const Cart = React.lazy(() => import("./pages/Cart"));
+const PlaceOrder = React.lazy(() => import("./pages/PlaceOrder"));
+const Login = React.lazy(() => import("./pages/Authentication"));
+const Admin = React.lazy(() => import("./pages/Admin"));
+const NotFound = React.lazy(() => import("./pages/NotFound"));
 
 const App = () => {
-  const [showSearchBar, setShowSearchBar] = useState(false);
-  const [search, setSearch] = useState("");
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const { setCartItems } = useContext(ShopContext);
-  const navigate = useNavigate();
+  const { isLoggedIn, isAdmin } = useAuth();
   const { pathname } = useLocation();
   useEffect(() => {
     window.scrollTo(0, 0);
   }, [pathname]);
-  useEffect(() => {
-    const savedIsLoggedIn = JSON.parse(localStorage.getItem("isLoggedIn"));
-    if (savedIsLoggedIn) {
-      setIsLoggedIn(savedIsLoggedIn);
-    } else {
-      setIsLoggedIn(false);
-    }
-  }, []);
-  function handleLogout() {
-    setIsLoggedIn(false);
-    localStorage.removeItem("isLoggedIn");
-    navigate("/Login");
-    localStorage.removeItem("cartItems");
-    setCartItems({});
-    localStorage.removeItem("username");
-    localStorage.removeItem("isAdminUser");
-  }
   return (
     <div className="container">
       <ToastContainer />
-      <NavBar
-        setShowSearchBar={setShowSearchBar}
-        handleLogout={handleLogout}
-        isLoggedIn={isLoggedIn}
-      />
-      <SearchBar
-        showSearchBar={showSearchBar}
-        setShowSearchBar={setShowSearchBar}
-        search={search}
-        setSearch={setSearch}
-      />
+      <NavBar />
+      <SearchBar />
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/Collection" element={<Collection search={search} />} />
-        <Route path="/About" element={<About />} />
-        <Route path="/Contact" element={<Contact />} />
+        <Route
+          path="/Collection"
+          element={
+            <React.Suspense fallback={<LoadingProducts />}>
+              <Collection />
+            </React.Suspense>
+          }
+        />
+        <Route
+          path="/About"
+          element={
+            <React.Suspense fallback={<LoadingProducts />}>
+              <About />
+            </React.Suspense>
+          }
+        />
+        <Route
+          path="/Contact"
+          element={
+            <React.Suspense fallback={<LoadingProducts />}>
+              <Contact />
+            </React.Suspense>
+          }
+        />
         <Route
           path="/Products/:productId"
-          element={<Product isLoggedIn={isLoggedIn} />}
+          element={
+            <React.Suspense fallback={<LoadingProducts />}>
+              <Product />
+            </React.Suspense>
+          }
         />
-        {isLoggedIn && <Route path="/Cart" element={<Cart />} />}
-        {isLoggedIn && <Route path="/PlaceOrder" element={<PlaceOrder />} />}
-        <Route
-          path="/Login"
-          element={<Login setIsLoggedIn={setIsLoggedIn} />}
-        />
-        {JSON.parse(localStorage.getItem("isAdminUser")) && (
-          <Route path="/Admin" element={<Admin />} />
+        {isLoggedIn && (
+          <Route
+            path="/Cart"
+            element={
+              <React.Suspense fallback={<LoadingProducts />}>
+                <Cart />
+              </React.Suspense>
+            }
+          />
         )}
-        <Route path="*" element={<NotFound />} />
+        {isLoggedIn && (
+          <Route
+            path="/PlaceOrder"
+            element={
+              <React.Suspense fallback={<LoadingProducts />}>
+                <PlaceOrder />
+              </React.Suspense>
+            }
+          />
+        )}
+        {!isLoggedIn && (
+          <Route
+            path="/Authentication"
+            element={
+              <React.Suspense fallback={<LoadingProducts />}>
+                <Login />
+              </React.Suspense>
+            }
+          />
+        )}
+        {isAdmin && isLoggedIn && (
+          <Route
+            path="/Admin"
+            element={
+              <React.Suspense fallback={<LoadingProducts />}>
+                <Admin />
+              </React.Suspense>
+            }
+          />
+        )}
+        <Route
+          path="*"
+          element={
+            <React.Suspense fallback={<LoadingProducts />}>
+              <NotFound />
+            </React.Suspense>
+          }
+        />
       </Routes>
       <Footer />
     </div>
