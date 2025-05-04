@@ -47,7 +47,6 @@ Forever is a modern e-commerce platform built with React and Vite. It provides a
    cd forever-ecommerce/frontend
    ```
 
-````
 
 2. Install dependencies:
 
