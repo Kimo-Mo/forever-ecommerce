@@ -1,24 +1,21 @@
-/* eslint-disable react/prop-types */
-import { useContext, useEffect, useState } from "react";
-import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import RelatedProducts from "../components/RelatedProducts";
-import { ShopContext } from "../Contexts/ShopContext";
+import { useShopContext } from "../customs/useShopContext";
 import { toast } from "react-toastify";
 import LoadingProducts from "../components/LoadingProducts";
+import { useAuth } from "../customs/useAuth";
 
-const Product = ({ isLoggedIn }) => {
+const Product = () => {
+  const { products, addToCart } = useShopContext();
+  const { isLoggedIn } = useAuth();
   const [productItem, setProductItem] = useState({});
   const { productId } = useParams();
   const [img, setImg] = useState("");
   const [size, setSize] = useState();
-  const { pathname } = useLocation();
-  const { products, addToCart } = useContext(ShopContext);
   const navigate = useNavigate();
+
   useEffect(() => {
-    window.scrollTo(0, 0);
-  }, [pathname]);
-  useEffect(() => {
-    // ====== fetch from vercel deployment ======
     if (products) {
       const product = products.find((p) => p.id === productId);
       if (product) {
@@ -28,13 +25,6 @@ const Product = ({ isLoggedIn }) => {
         console.log("Product not found");
       }
     }
-    // ====== fetch from local host ======
-    // fetch(`http://localhost:3000/products/${productId}`)
-    //   .then((res) => res.json())
-    //   .then((data) => {
-    //     setProductItem(data);
-    //     setImg(data.img);
-    //   });
   }, [productId, products]);
 
   return productItem ? (
@@ -100,7 +90,7 @@ const Product = ({ isLoggedIn }) => {
                 addToCart(productId, size);
               } else {
                 toast.error("You have to login");
-                navigate("/Login");
+                navigate("/Authentication");
               }
             }}
             className="btn bg-dark text-light py-2 px-5 text-uppercase">
