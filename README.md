@@ -42,10 +42,10 @@ Forever is a modern e-commerce platform built with React and Vite. It provides a
 ## Installation and Setup
 
 1. Clone the repository:
-   ```bash
-   git clone https://github.com/your-repo/forever-ecommerce.git
-   cd forever-ecommerce/frontend
-   ```
+```bash
+  git clone https://github.com/your-repo/forever-ecommerce.git
+  cd forever-ecommerce/frontend
+```
 
 
 2. Install dependencies:
