@@ -14,8 +14,7 @@ const Footer = () => {
             style={{ width: "8rem" }}
           />
           <p
-            className="text-secondary m-0 pe-0 pe-md-5"
-            style={{ fontSize: ".875rem" }}>
+            className="text-secondary m-0 pe-0 pe-md-5">
             Lorem Ipsum is simply dummy text of the printing and typesetting
             industry. Lorem Ipsum has been the industry&apos;s standard dummy
             text ever since the 1500s, when an unknown printer took a galley of
@@ -24,7 +23,7 @@ const Footer = () => {
         </div>
         <div className="col-12 col-md-3">
           <h6 className="mb-3">COMPANY</h6>
-          <ul className="text-secondary" style={{ fontSize: ".875rem" }}>
+          <ul className="text-secondary">
             <li>
               <Link to="/">Home</Link>
             </li>
@@ -41,7 +40,7 @@ const Footer = () => {
         </div>
         <div className="col-12 col-md-3">
           <h6 className="mb-3">GET IN TOUCH</h6>
-          <ul className="text-secondary" style={{ fontSize: ".875rem" }}>
+          <ul className="text-secondary">
             <li>+2-010-111-9999</li>
             <li>admin@forever.com</li>
             <li>Zagazig, Sharqia, Egypt</li>

@@ -1,22 +1,22 @@
 /* eslint-disable react/prop-types */
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import ProductCard from "./ProductCard";
 import { Link } from "react-router-dom";
 import SectionTitle from "./SectionTitle";
-import { ShopContext } from "../Contexts/ShopContext";
+import { useShopContext } from "../customs/useShopContext";
 import LoadingProducts from "./LoadingProducts";
 
 const RelatedProducts = ({ category, subCategory }) => {
   const [relatedProducts, setRelatedProducts] = useState([]);
-  const { products } = useContext(ShopContext);
+  const { products } = useShopContext();
   useEffect(() => {
     if (products) {
       let relatedProducts = structuredClone(products);
-      setRelatedProducts(relatedProducts.filter(
-          (product) =>
-            product.category == category && product.subCategory == subCategory
-        )
-        .slice(0, 4));
+      setRelatedProducts(
+        relatedProducts
+          .filter((p) => p.category == category && p.subCategory == subCategory)
+          .slice(0, 4)
+      );
     }
   }, [category, subCategory, products]);
   return products ? (

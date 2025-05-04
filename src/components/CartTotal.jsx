@@ -1,8 +1,7 @@
-import { useContext } from "react";
-import { ShopContext } from "../Contexts/ShopContext";
+import { useShopContext } from "../customs/useShopContext";
 
 const CartTotal = () => {
-  const { getCartAmount } = useContext(ShopContext);
+  const { getCartAmount } = useShopContext();
   return (
     <div className="cartTotal mt-5">
       <div className="d-flex align-items-center justify-content-start gap-3 mb-4">

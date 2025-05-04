@@ -6,11 +6,11 @@ const ProductCard = ({ img, title, price }) => {
       <div className="overflow-hidden">
         <img src={img} alt="product image" />
       </div>
-        <div className="p-3">
-          <p>{title}</p>
-          <p className="m-0 fw-bold">${price}</p>
-        </div>
+      <div className="p-3">
+        <p>{title}</p>
+        <p className="m-0 fw-bold">${price}</p>
       </div>
+    </div>
   );
 };
 

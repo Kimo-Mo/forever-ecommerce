@@ -1,42 +1,26 @@
-import { useEffect, useState } from "react";
 import LoadingProducts from "./LoadingProducts";
 import { toast } from "react-toastify";
+import { useShopContext } from "../customs/useShopContext";
+import { deleteDoc, doc } from "firebase/firestore";
+import { db } from "../firebase";
 
 const ProductList = () => {
-  const [products, setProducts] = useState();
+  const { products, fetchProducts } = useShopContext();
 
-  async function deleteProductById(/*productId*/) {
-    toast.error("Delete Feature is Disabled.");
-    return;
-    // try {
-    //   const response = await fetch(
-    //     `https://forever-json-server.vercel.app/products/${productId}`,
-    //     {
-    //       method: "DELETE",
-    //     }
-    //   );
-    //   if (response.ok) {
-    //     toast.error(`Product deleted successfully.`);
-    //     displayProducts();
-    //   } else {
-    //     console.error(`Failed to delete product with ID ${productId}`);
-    //     toast.error(`Failed to delete product.`);
-    //   }
-    // } catch (error) {
-    //   console.error("Error deleting product:", error);
-    //   alert("An error occurred while deleting the product.");
-    // }
-  }
-  useEffect(() => {
-    displayProducts();
-  }, []);
-  const displayProducts = () => {
-    fetch("https://forever-json-server.vercel.app/products")
-      .then((res) => res.json())
-      .then((data) => {
-        setProducts(data);
-      })
-      .catch((err) => console.log(err));
+  const deleteProductById = async (productId) => {
+    try {
+      if (!productId) {
+        toast.error("Product ID is required to delete the product");
+        return;
+      }
+      const docRef = doc(db, 'products', productId);
+      await deleteDoc(docRef);
+      toast.success('Product deleted successfully');
+      fetchProducts();
+    } catch (error) {
+      console.error('Error deleting product:', error);
+      toast.error('Failed to delete product');
+    }
   };
   return products ? (
     <div className="d-flex flex-column gap-3">

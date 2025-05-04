@@ -1,6 +1,6 @@
 import "./Style/HeroSection.css";
 import { Swiper, SwiperSlide } from "swiper/react";
-import { Autoplay, Pagination, Navigation } from "swiper/modules";
+import { Pagination, Navigation } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/pagination";
 const HeroSection = () => {
@@ -11,12 +11,8 @@ const HeroSection = () => {
           dynamicBullets: true,
         }}
         loop={true}
-        autoplay={{
-          delay: 5000,
-          disableOnInteraction: false,
-        }}
         navigation={true}
-        modules={[Autoplay, Pagination, Navigation]}
+        modules={[Pagination, Navigation]}
         className="mySwiper">
         <SwiperSlide>
           <div className="d-flex flex-column flex-md-row border rounded">
@@ -35,7 +31,7 @@ const HeroSection = () => {
             </div>
             <img
               className="heroImg"
-              src="/imgs/TShirtModel2.jpg"
+              src="/imgs/TShirtModel2.webp"
               alt="T-Shirt Model2"
             />
           </div>
@@ -57,7 +53,7 @@ const HeroSection = () => {
             </div>
             <img
               className="heroImg"
-              src="/imgs/TShirtModel1.jpg"
+              src="/imgs/TShirtModel1.webp"
               alt="T-Shirt Model1"
             />
           </div>

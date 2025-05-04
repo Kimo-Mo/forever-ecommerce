@@ -1,18 +1,20 @@
-/* eslint-disable react-hooks/exhaustive-deps */
-/* eslint-disable react/prop-types */
 import { useEffect } from "react";
 import { useLocation } from "react-router-dom";
+import { useShopContext } from "../customs/useShopContext";
 
-function SearchBar({ showSearchBar, setShowSearchBar, search, setSearch }) {
-  const location = useLocation();
+function SearchBar() {
+  const { showSearchBar, setShowSearchBar, search, setSearch } =
+    useShopContext();
+  const { pathname } = useLocation();
   useEffect(() => {
-    if (!location.pathname.includes("/Collection")) {
+    if (!pathname.includes("/Collection")) {
       setShowSearchBar(false);
     }
-  }, [location]);
+  }, [pathname, setShowSearchBar]);
   return showSearchBar ? (
     <div className="border-top py-4 bg-light-subtle d-flex gap-3 align-items-center justify-content-center">
       <input
+        name="search"
         type="search"
         placeholder="Search"
         className="form-control w-50"

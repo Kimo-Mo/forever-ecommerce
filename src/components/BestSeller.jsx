@@ -1,19 +1,17 @@
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import SectionTitle from "./SectionTitle";
 import ProductCard from "./ProductCard";
 import LoadingProducts from "./LoadingProducts";
 import { Link } from "react-router-dom";
-import { ShopContext } from "../Contexts/ShopContext";
+import { useShopContext } from "../customs/useShopContext";
 
 const BestSeller = () => {
   const [bestProducts, setBestProducts] = useState([]);
-  const { products } = useContext(ShopContext);
+  const { products } = useShopContext();
   useEffect(() => {
     if (products) {
       let bestProducts = structuredClone(products);
-      setBestProducts(
-        bestProducts.filter((product) => product.bestseller).splice(0, 4)
-      );
+      setBestProducts(bestProducts.filter((p) => p.bestseller));
     }
   }, [products]);
   return products ? (

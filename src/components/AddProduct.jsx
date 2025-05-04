@@ -1,16 +1,23 @@
 import { useState } from "react";
 import { toast } from "react-toastify";
+import { useShopContext } from "../customs/useShopContext";
+import { addDoc, collection } from "firebase/firestore";
+import { db } from "../firebase";
+
+let initialFormState = {
+  img: "",
+  productName: "",
+  productDescription: "",
+  category: "Men",
+  subcategory: "TopWear",
+  productPrice: "",
+  bestseller: false,
+  latestCollection: false,
+};
 
 const AddProduct = () => {
-  const [formInputs, setFormInputs] = useState({
-    img: "",
-    productName: "",
-    productDescription: "",
-    category: "Men",
-    subcategory: "TopWear",
-    productPrice: "",
-    bestseller: false,
-  });
+  const { fetchProducts } = useShopContext();
+  const [formInputs, setFormInputs] = useState(initialFormState);
 
   const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -29,6 +36,13 @@ const AddProduct = () => {
       setFormInputs({
         ...formInputs,
         bestseller: e.target.checked,
+      });
+      return;
+    }
+    if (name === "latestCollection") {
+      setFormInputs({
+        ...formInputs,
+        latestCollection: e.target.checked,
       });
       return;
     }
@@ -63,54 +77,36 @@ const AddProduct = () => {
   }
 
   async function handleSubmit() {
-    // setIsSubmitting(true);
     if (!validateForm()) {
-      setIsSubmitting(false);
       return;
     }
-    toast.error("Add Feature is Disabled.");
-    return;
-    // try {
-    //   const productData = {
-    //     img: formInputs.img,
-    //     title: formInputs.productName,
-    //     description: formInputs.productDescription,
-    //     category: formInputs.category,
-    //     subCategory: formInputs.subcategory,
-    //     price: parseFloat(formInputs.productPrice),
-    //     bestseller: formInputs.bestseller,
-    //   };
-    //   const response = await fetch(
-    //     "https://forever-json-server.vercel.app/products",
-    //     {
-    //       method: "POST",
-    //       headers: {
-    //         "Content-Type": "application/json",
-    //       },
-    //       body: JSON.stringify(productData),
-    //     }
-    //   );
-    //   if (response.ok) {
-    //     setFormInputs({
-    //       img: "",
-    //       productName: "",
-    //       productDescription: "",
-    //       category: "Men",
-    //       subcategory: "TopWear",
-    //       productPrice: "",
-    //       bestseller: false,
-    //     });
-    //     toast.success("Product added successfully!");
-    //   } else {
-    //     console.error("Failed to add product");
-    //     alert("Failed to add product");
-    //   }
-    // } catch (error) {
-    //   console.error("Error submitting product:", error);
-    //   alert("An error occurred while adding the product");
-    // } finally {
-    //   setIsSubmitting(false);
-    // }
+    setIsSubmitting(true);
+    const productData = {
+      img: formInputs.img,
+      title: formInputs.productName,
+      description: formInputs.productDescription,
+      category: formInputs.category,
+      subCategory: formInputs.subcategory,
+      price: parseFloat(formInputs.productPrice),
+      bestseller: formInputs.bestseller,
+      latestCollection: formInputs.latestCollection,
+    };
+    try {
+      if (!productData.img) {
+        toast.error("Please upload an image.");
+        return;
+      }
+      const productsCollection = collection(db, "products");
+      await addDoc(productsCollection, productData);
+      fetchProducts();
+      toast.success("Product Added Successfully.");
+    } catch (error) {
+      console.error("Error submitting product:", error);
+      toast.error("Cannot add Product!");
+    } finally {
+      setIsSubmitting(false);
+      setFormInputs(initialFormState);
+    }
   }
 
   return (
@@ -206,6 +202,19 @@ const AddProduct = () => {
         />
         <label className="form-check-label" htmlFor="flexCheckDefault">
           Add to Bestseller
+        </label>
+      </div>
+      <div className="form-check">
+        <input
+          className="form-check-input"
+          type="checkbox"
+          id="flexCheckDefault1"
+          name="latestCollection"
+          checked={formInputs.latestCollection}
+          onChange={handleInputChange}
+        />
+        <label className="form-check-label" htmlFor="flexCheckDefault1">
+          Add to Latest Collection
         </label>
       </div>
       <button
