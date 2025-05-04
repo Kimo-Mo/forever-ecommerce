@@ -1,13 +1,13 @@
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import LoadingProducts from "../components/LoadingProducts";
 import { toast } from "react-toastify";
-import { ShopContext } from "../Contexts/ShopContext";
+import { useShopContext } from "../customs/useShopContext";
 import CartTotal from "../components/CartTotal";
 import { useNavigate } from "react-router-dom";
 
 const Cart = () => {
   const { products, cartItems, updateQuantity, getCartAmount } =
-    useContext(ShopContext);
+    useShopContext();
   const [cartData, setCartData] = useState([]);
   const navigate = useNavigate();
   useEffect(() => {

@@ -1,12 +1,11 @@
 import { toast } from "react-toastify";
 import CartTotal from "../components/CartTotal";
-import { useContext } from "react";
-import { ShopContext } from "../Contexts/ShopContext";
+import { useShopContext } from "../customs/useShopContext";
 import { useNavigate } from "react-router-dom";
 
 const PlaceOrder = () => {
   const navigate = useNavigate();
-  const { getCartAmount, setCartItems } = useContext(ShopContext);
+  const { getCartAmount, setCartItems } = useShopContext();
   return (
     <div className="placeOrder pt-5 border-top">
       <div className="d-flex align-items-center justify-content-start gap-3 mb-5">

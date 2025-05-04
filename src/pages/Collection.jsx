@@ -1,18 +1,17 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-/* eslint-disable react/prop-types */
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import ProductCard from "../components/ProductCard";
 import FilterProducts from "../components/FilterProducts";
 import LoadingProducts from "../components/LoadingProducts";
 import { Link } from "react-router-dom";
-import { ShopContext } from "../Contexts/ShopContext";
+import { useShopContext } from "../customs/useShopContext";
 
-const Collection = ({ search }) => {
+const Collection = () => {
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [category, setCategory] = useState([]);
   const [subcategory, setSubcategory] = useState([]);
   const [sortType, setSortType] = useState("relevant");
-  const { products } = useContext(ShopContext);
+  const { products, search } = useShopContext();
   useEffect(() => {
     if (products) {
       setFilteredProducts(products);
@@ -89,9 +88,9 @@ const Collection = ({ search }) => {
               onChange={(e) => {
                 setSortType(e.target.value);
               }}>
-              <option value="relevant">Sort By: Relevant</option>
-              <option value="low-high">Sort By: Low to High</option>
-              <option value="high-low">Sort By: High to Low</option>
+              <option value="relevant">Relevant</option>
+              <option value="low-high">Low to High</option>
+              <option value="high-low">High to Low</option>
             </select>
           </div>
         </div>
