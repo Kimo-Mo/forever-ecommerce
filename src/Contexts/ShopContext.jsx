@@ -1,44 +1,36 @@
 /* eslint-disable react/prop-types */
+import { collection, getDocs } from "firebase/firestore";
 import { createContext, useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
 import { toast } from "react-toastify";
+import { db } from "../firebase";
+
 export const ShopContext = createContext({});
-const ShopContextProvider = (props) => {
+
+const ShopContextProvider = ({ children }) => {
+  const [showSearchBar, setShowSearchBar] = useState(false);
+  const [search, setSearch] = useState("");
   const [cartItems, setCartItems] = useState({});
   const [products, setProducts] = useState();
-  const { pathname } = useLocation();
   useEffect(() => {
-    if (pathname.includes("/")) {
-      // ====== fetch from vercel deployment ======
-      fetch(
-        "https://forever-json-server.vercel.app/products"
-      )
-        .then((response) => {
-          if (!response.ok) {
-            throw new Error("Network response was not ok");
-          }
-          return response.json();
-        })
-        .then((data) => {
-          setProducts(data);
-        })
-        .catch((error) => {
-          console.error("There was a problem with the fetch operation:", error);
-        });
-      // ====== fetch from local host ======
-      // fetch("http://localhost:3000/products")
-      //   .then((res) => res.json())
-      //   .then((data) => {
-      //     setProducts(data);
-      //   })
-      //   .catch((err) => console.log(err));
-
-      const savedCartItems = JSON.parse(localStorage.getItem("cartItems"));
-      if (savedCartItems) {
-        setCartItems(savedCartItems);
-      }
+    fetchProducts();
+    const savedCartItems = JSON.parse(localStorage.getItem("cartItems"));
+    if (savedCartItems) {
+      setCartItems(savedCartItems);
     }
-  }, [pathname]);
+  }, []);
+  async function fetchProducts() {
+    try {
+      const querySnapshot = await getDocs(collection(db, "products"));
+      const products = querySnapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+      setProducts(products);
+    } catch (error) {
+      console.error("Error loading products:", error);
+      toast.error("Failed to load products.");
+    }
+  }
   const addToCart = async (productId, size) => {
     if (!size) {
       toast.error("Please Select a Size for Product !");
@@ -101,15 +93,18 @@ const ShopContextProvider = (props) => {
 
   const value = {
     products,
+    fetchProducts,
     addToCart,
     cartItems,
     setCartItems,
     getCartCount,
     updateQuantity,
     getCartAmount,
+    showSearchBar,
+    setShowSearchBar,
+    search,
+    setSearch,
   };
-  return (
-    <ShopContext.Provider value={value}>{props.children}</ShopContext.Provider>
-  );
+  return <ShopContext.Provider value={value}>{children}</ShopContext.Provider>;
 };
 export default ShopContextProvider;
