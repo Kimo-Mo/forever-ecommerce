@@ -65,16 +65,14 @@ const App = () => {
             </React.Suspense>
           }
         />
-        {isLoggedIn && (
-          <Route
-            path="/Cart"
-            element={
-              <React.Suspense fallback={<LoadingProducts />}>
-                <Cart />
-              </React.Suspense>
-            }
-          />
-        )}
+        <Route
+          path="/Cart"
+          element={
+            <React.Suspense fallback={<LoadingProducts />}>
+              <Cart />
+            </React.Suspense>
+          }
+        />
         {isLoggedIn && (
           <Route
             path="/PlaceOrder"

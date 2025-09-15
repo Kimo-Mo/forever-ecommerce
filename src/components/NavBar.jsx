@@ -53,22 +53,10 @@ const NavBar = () => {
             </Link>
           )}
         </div>
-        {isLoggedIn ? (
-          <Link to="/Cart" className="position-relative">
-            <img
-              src="/imgs/cart_icon.png"
-              alt="cart icon"
-              className="navIcon"
-            />
-            {getCartCount() && isLoggedIn ? (
-              <span className="cartNumber">{getCartCount()}</span>
-            ) : (
-              <></>
-            )}
-          </Link>
-        ) : (
-          <></>
-        )}
+        <Link to="/Cart" className="position-relative">
+          <img src="/imgs/cart_icon.png" alt="cart icon" className="navIcon" />
+          <span className="cartNumber">{getCartCount()}</span>
+        </Link>
         <img
           onClick={() => setMenuIsVisible(true)}
           src="/imgs/menu_icon.png"

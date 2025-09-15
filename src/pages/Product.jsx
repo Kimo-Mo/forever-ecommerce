@@ -1,19 +1,15 @@
-import { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
-import RelatedProducts from "../components/RelatedProducts";
-import { useShopContext } from "../customs/useShopContext";
-import { toast } from "react-toastify";
-import LoadingProducts from "../components/LoadingProducts";
-import { useAuth } from "../customs/useAuth";
+import { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
+import RelatedProducts from '../components/RelatedProducts';
+import { useShopContext } from '../customs/useShopContext';
+import LoadingProducts from '../components/LoadingProducts';
 
 const Product = () => {
   const { products, addToCart } = useShopContext();
-  const { isLoggedIn } = useAuth();
   const [productItem, setProductItem] = useState({});
   const { productId } = useParams();
-  const [img, setImg] = useState("");
+  const [img, setImg] = useState('');
   const [size, setSize] = useState();
-  const navigate = useNavigate();
 
   useEffect(() => {
     if (products) {
@@ -22,7 +18,7 @@ const Product = () => {
         setProductItem(product);
         setImg(product.img);
       } else {
-        console.log("Product not found");
+        console.log('Product not found');
       }
     }
   }, [productId, products]);
@@ -30,11 +26,11 @@ const Product = () => {
   return productItem ? (
     <div className="pt-5 border-top ">
       <div className="d-flex gap-5 gap-lg-0 flex-column flex-md-row justify-content-between align-items-center">
-        <div className="d-flex justify-content-center" style={{ flex: "1" }}>
+        <div className="d-flex justify-content-center" style={{ flex: '1' }}>
           <img src={img} alt="product image" />
         </div>
-        <div style={{ flex: "1" }}>
-          <h4>{productItem.title || "Product Title"}</h4>
+        <div style={{ flex: '1' }}>
+          <h4>{productItem.title || 'Product Title'}</h4>
           <div className="stars d-flex gap-1 align-items-center mt-2 mb-4">
             <img src="/imgs/star_icon.png" alt="start icon" />
             <img src="/imgs/star_icon.png" alt="start icon" />
@@ -43,40 +39,40 @@ const Product = () => {
             <img src="/imgs/star_dull_icon.png" alt="start icon" />
             <p className="m-0">(122)</p>
           </div>
-          <h2 className="mb-3">${productItem.price || "0"}</h2>
+          <h2 className="mb-3">${productItem.price || '0'}</h2>
           <p className="text-secondary pe-md-5 me-md-5">
-            {productItem.description || "Product Description"}
+            {productItem.description || 'Product Description'}
           </p>
           <div className="my-4">
             <p>Select Sizes</p>
             <div className="sizes d-flex gap-1 gap-md-3 text-uppercase">
               <button
-                style={{ border: `${size == "s" ? "1px solid #FF532E" : ""}` }}
+                style={{ border: `${size == 's' ? '1px solid #FF532E' : ''}` }}
                 onClick={(e) => setSize(e.target.value)}
                 value="s">
                 s
               </button>
               <button
-                style={{ border: `${size == "m" ? "1px solid #FF532E" : ""}` }}
+                style={{ border: `${size == 'm' ? '1px solid #FF532E' : ''}` }}
                 onClick={(e) => setSize(e.target.value)}
                 value="m">
                 m
               </button>
               <button
-                style={{ border: `${size == "l" ? "1px solid #FF532E" : ""}` }}
+                style={{ border: `${size == 'l' ? '1px solid #FF532E' : ''}` }}
                 onClick={(e) => setSize(e.target.value)}
                 value="l">
                 l
               </button>
               <button
-                style={{ border: `${size == "xl" ? "1px solid #FF532E" : ""}` }}
+                style={{ border: `${size == 'xl' ? '1px solid #FF532E' : ''}` }}
                 onClick={(e) => setSize(e.target.value)}
                 value="xl">
                 xl
               </button>
               <button
                 style={{
-                  border: `${size == "xxl" ? "1px solid #FF532E" : ""}`,
+                  border: `${size == 'xxl' ? '1px solid #FF532E' : ''}`,
                 }}
                 onClick={(e) => setSize(e.target.value)}
                 value="xxl">
@@ -86,12 +82,7 @@ const Product = () => {
           </div>
           <button
             onClick={() => {
-              if (isLoggedIn) {
-                addToCart(productId, size);
-              } else {
-                toast.error("You have to login");
-                navigate("/Authentication");
-              }
+              addToCart(productId, size);
             }}
             className="btn bg-dark text-light py-2 px-5 text-uppercase">
             Add To Cart
@@ -109,7 +100,7 @@ const Product = () => {
           <span className="border p-3 d-block fw-bold">Description</span>
           <span className="border p-3 d-block">Reviews (122)</span>
         </div>
-        <div className="p-3 border" style={{ fontSize: "14px" }}>
+        <div className="p-3 border" style={{ fontSize: '14px' }}>
           <p className="text-secondary">
             An e-commerce website is an online platform that facilitates the
             buying and selling of products or services over the internet. It

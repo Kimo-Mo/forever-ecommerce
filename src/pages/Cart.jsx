@@ -4,10 +4,12 @@ import { toast } from "react-toastify";
 import { useShopContext } from "../customs/useShopContext";
 import CartTotal from "../components/CartTotal";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../customs/useAuth"
 
 const Cart = () => {
   const { products, cartItems, updateQuantity, getCartAmount } =
     useShopContext();
+  const { isLoggedIn } = useAuth();
   const [cartData, setCartData] = useState([]);
   const navigate = useNavigate();
   useEffect(() => {
@@ -110,6 +112,11 @@ const Cart = () => {
               toast.error("Add Products to cart first!");
               navigate("/collection");
             } else {
+              if (!isLoggedIn) {
+                toast.error('Please Login First!');
+                navigate('/Authentication');
+                return;
+              }
               navigate("/PlaceOrder");
             }
           }}
