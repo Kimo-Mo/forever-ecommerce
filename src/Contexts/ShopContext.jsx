@@ -1,39 +1,70 @@
 /* eslint-disable react/prop-types */
-import { collection, getDocs } from "firebase/firestore";
-import { createContext, useEffect, useState } from "react";
-import { toast } from "react-toastify";
-import { db } from "../firebase";
+import { collection, doc, getDocs, updateDoc } from 'firebase/firestore';
+import { createContext, useEffect, useState } from 'react';
+import { toast } from 'react-toastify';
+import { db } from '../firebase';
 
 export const ShopContext = createContext({});
 
 const ShopContextProvider = ({ children }) => {
+  const [loadingOrders, setLoadingOrders] = useState(true);
   const [showSearchBar, setShowSearchBar] = useState(false);
-  const [search, setSearch] = useState("");
+  const [search, setSearch] = useState('');
   const [cartItems, setCartItems] = useState({});
   const [products, setProducts] = useState();
+  const [orders, setOrders] = useState([]);
   useEffect(() => {
     fetchProducts();
-    const savedCartItems = JSON.parse(localStorage.getItem("cartItems"));
+    const savedCartItems = JSON.parse(localStorage.getItem('cartItems'));
     if (savedCartItems) {
       setCartItems(savedCartItems);
     }
+    fetchAllOrders();
   }, []);
   async function fetchProducts() {
     try {
-      const querySnapshot = await getDocs(collection(db, "products"));
+      const querySnapshot = await getDocs(collection(db, 'products'));
       const products = querySnapshot.docs.map((doc) => ({
         id: doc.id,
         ...doc.data(),
       }));
       setProducts(products);
     } catch (error) {
-      console.error("Error loading products:", error);
-      toast.error("Failed to load products.");
+      console.error('Error loading products:', error);
+      toast.error('Failed to load products.');
     }
   }
+  const fetchAllOrders = async () => {
+    setLoadingOrders(true);
+    try {
+      const querySnapshot = await getDocs(collection(db, 'orders'));
+      const orders = querySnapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+      setOrders(orders);
+    } catch (error) {
+      console.error('Error loading orders:', error);
+      toast.error('Failed to load orders.');
+    }
+    setLoadingOrders(false);
+  };
+
+  const updateOrderStatus = async (orderId, status) => {
+    try {
+      const orderRef = doc(db, 'orders', orderId);
+      await updateDoc(orderRef, { status });
+      toast.success('Order status updated.');
+      fetchAllOrders();
+    } catch (error) {
+      console.error('Error updating order status:', error);
+      toast.error('Failed to update order status.');
+    }
+  };
+
   const addToCart = async (productId, size) => {
     if (!size) {
-      toast.error("Please Select a Size for Product !");
+      toast.error('Please Select a Size for Product !');
       return;
     }
     let cartData = structuredClone(cartItems);
@@ -47,9 +78,9 @@ const ShopContextProvider = ({ children }) => {
       cartData[productId] = {};
       cartData[productId][size] = 1;
     }
-    toast.success("This Product is Added to Cart");
+    toast.success('This Product is Added to Cart');
     setCartItems(cartData);
-    localStorage.setItem("cartItems", JSON.stringify(cartData));
+    localStorage.setItem('cartItems', JSON.stringify(cartData));
   };
   const getCartCount = () => {
     let totalCount = 0;
@@ -88,7 +119,16 @@ const ShopContextProvider = ({ children }) => {
     let cartData = structuredClone(cartItems);
     cartData[productId][size] = quantity;
     setCartItems(cartData);
-    localStorage.setItem("cartItems", JSON.stringify(cartData));
+    localStorage.setItem('cartItems', JSON.stringify(cartData));
+  };
+  const deleteProduct = async (productId, size) => {
+    let cartData = structuredClone(cartItems);
+    delete cartData[productId][size];
+    if (Object.keys(cartData[productId]).length === 0) {
+      delete cartData[productId];
+    }
+    setCartItems(cartData);
+    localStorage.setItem('cartItems', JSON.stringify(cartData));
   };
 
   const value = {
@@ -104,6 +144,11 @@ const ShopContextProvider = ({ children }) => {
     setShowSearchBar,
     search,
     setSearch,
+    deleteProduct,
+    orders,
+    fetchAllOrders,
+    loadingOrders,
+    updateOrderStatus,
   };
   return <ShopContext.Provider value={value}>{children}</ShopContext.Provider>;
 };

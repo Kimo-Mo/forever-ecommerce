@@ -19,9 +19,10 @@ const PlaceOrder = React.lazy(() => import("./pages/PlaceOrder"));
 const Login = React.lazy(() => import("./pages/Authentication"));
 const Admin = React.lazy(() => import("./pages/Admin"));
 const NotFound = React.lazy(() => import("./pages/NotFound"));
+const OrderHistory = React.lazy(() => import("./pages/OrderHistory"));
 
 const App = () => {
-  const { isLoggedIn, isAdmin } = useAuth();
+  const { isLoggedIn } = useAuth();
   const { pathname } = useLocation();
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -83,6 +84,14 @@ const App = () => {
             }
           />
         )}
+        <Route
+          path="/OrderHistory"
+          element={
+            <React.Suspense fallback={<LoadingProducts />}>
+              <OrderHistory />
+            </React.Suspense>
+          }
+        />
         {!isLoggedIn && (
           <Route
             path="/Authentication"
@@ -93,16 +102,14 @@ const App = () => {
             }
           />
         )}
-        {isAdmin && isLoggedIn && (
-          <Route
-            path="/Admin"
-            element={
-              <React.Suspense fallback={<LoadingProducts />}>
-                <Admin />
-              </React.Suspense>
-            }
-          />
-        )}
+        <Route
+          path="/Admin"
+          element={
+            <React.Suspense fallback={<LoadingProducts />}>
+              <Admin />
+            </React.Suspense>
+          }
+        />
         <Route
           path="*"
           element={

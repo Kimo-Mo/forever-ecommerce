@@ -7,7 +7,7 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "../customs/useAuth"
 
 const Cart = () => {
-  const { products, cartItems, updateQuantity, getCartAmount } =
+  const { products, cartItems, updateQuantity, getCartAmount, deleteProduct } =
     useShopContext();
   const { isLoggedIn } = useAuth();
   const [cartData, setCartData] = useState([]);
@@ -95,7 +95,7 @@ const Cart = () => {
                   }}
                   className=""
                   onClick={() => {
-                    updateQuantity(item.id, item.size, 0);
+                    deleteProduct(item.id, item.size);
                     toast.error("You Deleted Product(s)!");
                   }}
                 />

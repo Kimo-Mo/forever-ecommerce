@@ -1,5 +1,5 @@
 import "./Style/NavBar.css";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useShopContext } from "../customs/useShopContext";
 import { useAuth } from "../customs/useAuth";
 import NavMenu from "./NavMenu";
@@ -9,6 +9,7 @@ const NavBar = () => {
   const [menuIsVisible, setMenuIsVisible] = useState(false);
   const { getCartCount, setShowSearchBar } = useShopContext();
   const { isLoggedIn, logout, currentUser } = useAuth();
+  const navigate = useNavigate();
 
   return (
     <div className="navBar d-flex justify-content-between align-items-center py-4 fw-medium">
@@ -39,6 +40,7 @@ const NavBar = () => {
               <div className="group-hover position-absolute pt-3">
                 <div className="d-flex flex-column gap-3 py-3 px-4 rounded">
                   <p>{currentUser?.displayName || "User"}</p>
+                  <p onClick={() => navigate("/OrderHistory")}>My Orders</p>
                   <p onClick={() => logout()}>Logout</p>
                 </div>
               </div>

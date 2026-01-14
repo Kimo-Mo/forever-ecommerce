@@ -23,6 +23,17 @@ const AdminSideBar = ({ currentState, setCurrentState }) => {
         }}>
         Products List
       </a>
+      {/* orders list */}
+      <a
+        href="#"
+        className={`d-block py-2 px-3 mb-4 ${
+          currentState == "orders" ? "active" : ""
+        }`}
+        onClick={() => {
+          setCurrentState("orders");
+        }}>
+        Orders List
+      </a>
     </div>
   );
 };
