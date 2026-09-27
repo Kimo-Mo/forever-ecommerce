@@ -17,7 +17,7 @@ const OrderHistory = () => {
   }, [currentUser, isLoading, navigate]);
 
   useEffect(() => {
-    if (orders.length > 0 && currentUser) {
+    if (orders.length > 0 && products?.length > 0 && currentUser) {
       const getOrderDetails = () => {
         return orders.map((order) => {
           const orderItems = Object.entries(order.items).map(([itemId, sizes]) => {
@@ -114,7 +114,7 @@ const OrderHistory = () => {
                   const product = products?.find((p) => p.id === item.itemId);
                   return item.orderedVariants.map((size) => (
                     <div
-                      key={`${item.itemId}-${size}`}
+                      key={`${item.itemId}-${size.size}`}
                       className="d-flex align-items-center gap-3 mb-2">
                       {product?.img && (
                         <img

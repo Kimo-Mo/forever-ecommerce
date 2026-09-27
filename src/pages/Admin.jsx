@@ -8,14 +8,16 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "../customs/useAuth";
 
 const Admin = () => {
-  const { currentUser, isLoading, isAdmin } = useAuth();
+  const { isLoading, isAdmin } = useAuth();
   const navigate = useNavigate();
   const [currentState, setCurrentState] = useState("add");
   useEffect(() => {
-    if (!isLoading && !currentUser && !isAdmin) {
+    // Only a signed-in admin may reach this page. Anyone else (guest or a
+    // signed-in non-admin) is redirected to the authentication page.
+    if (!isLoading && !isAdmin) {
       navigate('/Authentication');
     }
-  }, [currentUser, isLoading, navigate, isAdmin]);
+  }, [isLoading, navigate, isAdmin]);
   return (
     <div className="adminPage border-top border-md-bottom d-flex flex-column flex-md-row">
       <AdminSideBar

@@ -1,12 +1,21 @@
 /* eslint-disable react/prop-types */
-import { collection, doc, getDocs, updateDoc } from 'firebase/firestore';
-import { createContext, useEffect, useState } from 'react';
+import {
+  collection,
+  doc,
+  getDocs,
+  query,
+  updateDoc,
+  where,
+} from 'firebase/firestore';
+import { createContext, useCallback, useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import { db } from '../firebase';
+import { useAuth } from '../customs/useAuth';
 
 export const ShopContext = createContext({});
 
 const ShopContextProvider = ({ children }) => {
+  const { currentUser, isAdmin, isLoading: isAuthLoading } = useAuth();
   const [loadingOrders, setLoadingOrders] = useState(true);
   const [showSearchBar, setShowSearchBar] = useState(false);
   const [search, setSearch] = useState('');
@@ -19,7 +28,6 @@ const ShopContextProvider = ({ children }) => {
     if (savedCartItems) {
       setCartItems(savedCartItems);
     }
-    fetchAllOrders();
   }, []);
   async function fetchProducts() {
     try {
@@ -34,21 +42,37 @@ const ShopContextProvider = ({ children }) => {
       toast.error('Failed to load products.');
     }
   }
-  const fetchAllOrders = async () => {
+  const fetchAllOrders = useCallback(async () => {
+    if (!currentUser) {
+      // Guests have no orders to read, so never query the collection for them.
+      setOrders([]);
+      setLoadingOrders(false);
+      return;
+    }
     setLoadingOrders(true);
     try {
-      const querySnapshot = await getDocs(collection(db, 'orders'));
-      const orders = querySnapshot.docs.map((doc) => ({
+      // Admins manage every order; regular users only ever read their own.
+      const ordersQuery = isAdmin
+        ? collection(db, 'orders')
+        : query(collection(db, 'orders'), where('userId', '==', currentUser.uid));
+      const querySnapshot = await getDocs(ordersQuery);
+      const fetchedOrders = querySnapshot.docs.map((doc) => ({
         id: doc.id,
         ...doc.data(),
       }));
-      setOrders(orders);
+      setOrders(fetchedOrders);
     } catch (error) {
       console.error('Error loading orders:', error);
       toast.error('Failed to load orders.');
     }
     setLoadingOrders(false);
-  };
+  }, [currentUser, isAdmin]);
+
+  // Re-fetch orders whenever the signed-in user (or their role) changes.
+  useEffect(() => {
+    if (isAuthLoading) return;
+    fetchAllOrders();
+  }, [isAuthLoading, fetchAllOrders]);
 
   const updateOrderStatus = async (orderId, status) => {
     try {

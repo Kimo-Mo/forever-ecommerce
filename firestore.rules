@@ -1,0 +1,49 @@
+rules_version = '2';
+
+// Firestore Security Rules for the Forever e-commerce project.
+//
+// IMPORTANT: this file is NOT deployed automatically. Paste it into
+// Firebase Console -> Firestore Database -> Rules, or run:
+//   firebase deploy --only firestore:rules
+//
+// The client-side scoping in src/Contexts/ShopContext.jsx is only a UX
+// optimisation; these rules are what actually protect customer data.
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    // Must stay in sync with the admin email in src/Contexts/AuthContext.jsx
+    function isAdmin() {
+      return isSignedIn()
+        && request.auth.token.email != null
+        && request.auth.token.email.lower() == 'kimomo844@gmail.com';
+    }
+
+    // Catalogue: readable by everyone, writable by admins only.
+    match /products/{productId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // Orders contain personal data (name, email, phone, address), so a signed-in
+    // user may only read or create their own orders. Only admins read them all
+    // and only admins may change a status or delete an order.
+    match /orders/{orderId} {
+      allow read: if isAdmin()
+        || (isSignedIn() && resource.data.userId == request.auth.uid);
+
+      allow create: if isSignedIn()
+        && request.data.userId == request.auth.uid;
+
+      allow update, delete: if isAdmin();
+    }
+
+    // Deny anything not matched above.
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

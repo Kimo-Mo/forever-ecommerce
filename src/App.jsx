@@ -1,4 +1,4 @@
-import { Route, Routes, useLocation } from "react-router-dom";
+import { Navigate, Route, Routes, useLocation } from "react-router-dom";
 import Home from "./pages/Home";
 import NavBar from "./components/NavBar";
 import Footer from "./components/Footer";
@@ -22,7 +22,7 @@ const NotFound = React.lazy(() => import("./pages/NotFound"));
 const OrderHistory = React.lazy(() => import("./pages/OrderHistory"));
 
 const App = () => {
-  const { isLoggedIn } = useAuth();
+  const { isLoggedIn, isLoading } = useAuth();
   const { pathname } = useLocation();
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -74,16 +74,20 @@ const App = () => {
             </React.Suspense>
           }
         />
-        {isLoggedIn && (
-          <Route
-            path="/PlaceOrder"
-            element={
+        <Route
+          path="/PlaceOrder"
+          element={
+            isLoading ? (
+              <LoadingProducts />
+            ) : isLoggedIn ? (
               <React.Suspense fallback={<LoadingProducts />}>
                 <PlaceOrder />
               </React.Suspense>
-            }
-          />
-        )}
+            ) : (
+              <Navigate to="/Authentication" replace />
+            )
+          }
+        />
         <Route
           path="/OrderHistory"
           element={
@@ -92,16 +96,20 @@ const App = () => {
             </React.Suspense>
           }
         />
-        {!isLoggedIn && (
-          <Route
-            path="/Authentication"
-            element={
+        <Route
+          path="/Authentication"
+          element={
+            isLoading ? (
+              <LoadingProducts />
+            ) : isLoggedIn ? (
+              <Navigate to="/" replace />
+            ) : (
               <React.Suspense fallback={<LoadingProducts />}>
                 <Login />
               </React.Suspense>
-            }
-          />
-        )}
+            )
+          }
+        />
         <Route
           path="/Admin"
           element={
